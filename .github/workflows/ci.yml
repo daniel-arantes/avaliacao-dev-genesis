@@ -1,0 +1,48 @@
+name: CI
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+      - run: dotnet restore src/AvaliacaoCdb.Api/AvaliacaoCdb.Api.csproj
+      - run: dotnet restore tests/AvaliacaoCdb.Domain.Tests/AvaliacaoCdb.Domain.Tests.csproj
+      - run: dotnet restore tests/AvaliacaoCdb.Api.Tests/AvaliacaoCdb.Api.Tests.csproj
+      - run: dotnet build src/AvaliacaoCdb.Api/AvaliacaoCdb.Api.csproj --configuration Release --no-restore
+      - run: dotnet build tests/AvaliacaoCdb.Domain.Tests/AvaliacaoCdb.Domain.Tests.csproj --configuration Release --no-restore
+      - run: dotnet build tests/AvaliacaoCdb.Api.Tests/AvaliacaoCdb.Api.Tests.csproj --configuration Release --no-restore
+      - name: Test API scenarios
+        run: dotnet test tests/AvaliacaoCdb.Api.Tests/AvaliacaoCdb.Api.Tests.csproj --configuration Release --no-build
+      - name: Test domain and enforce coverage
+        run: >-
+          dotnet test tests/AvaliacaoCdb.Domain.Tests/AvaliacaoCdb.Domain.Tests.csproj
+          --configuration Release --no-build /p:CollectCoverage=true
+          /p:CoverletOutputFormat=cobertura /p:CoverletOutput=../../coverage/domain/
+          /p:Include="[AvaliacaoCdb.Domain]*" /p:Threshold=90
+          /p:ThresholdType=line /p:ThresholdStat=total
+      - uses: actions/upload-artifact@v4
+        with:
+          name: domain-coverage
+          path: coverage/domain/coverage.cobertura.xml
+  frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: src/AvaliacaoCdb.Web
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.22.3
+          cache: npm
+          cache-dependency-path: src/AvaliacaoCdb.Web/package-lock.json
+      - run: npm ci
+      - run: npm run build
+      - run: npm test
+      - run: npm run lint

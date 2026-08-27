@@ -1,0 +1,8 @@
+<Project Sdk="Microsoft.VisualStudio.JavaScript.Sdk/1.0.6453341">
+  <PropertyGroup>
+    <StartupCommand>npm start</StartupCommand>
+    <BuildCommand>npm run build</BuildCommand>
+    <ShouldRunBuildScript>false</ShouldRunBuildScript>
+    <BuildOutputFolder>$(MSBuildProjectDirectory)\dist\AvaliacaoCdb.Web</BuildOutputFolder>
+  </PropertyGroup>
+</Project>

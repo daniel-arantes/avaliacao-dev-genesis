@@ -1,0 +1,6 @@
+@host = http://localhost:5163
+
+POST {{host}}/api/investments/cdb/calculate
+Content-Type: application/json
+
+{"initialValue": 1000.00, "months": 12}

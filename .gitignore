@@ -1,0 +1,11 @@
+**/bin/
+**/obj/
+**/TestResults/
+**/coverage/
+**/node_modules/
+**/.angular/
+.vs/
+.vscode/
+tmp/
+*.user
+*.suo

@@ -1,0 +1,17 @@
+<Solution>
+  <Folder Name="/Documentation/">
+    <File Path="README.md" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/AvaliacaoCdb.Api/AvaliacaoCdb.Api.csproj" />
+    <Project Path="src/AvaliacaoCdb.Domain/AvaliacaoCdb.Domain.csproj" />
+    <Project Path="src/AvaliacaoCdb.Web/AvaliacaoCdb.Web.esproj">
+      <Build />
+      <Deploy />
+    </Project>
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/AvaliacaoCdb.Api.Tests/AvaliacaoCdb.Api.Tests.csproj" />
+    <Project Path="tests/AvaliacaoCdb.Domain.Tests/AvaliacaoCdb.Domain.Tests.csproj" />
+  </Folder>
+</Solution>

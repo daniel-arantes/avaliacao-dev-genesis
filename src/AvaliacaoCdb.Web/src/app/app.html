@@ -1,0 +1,23 @@
+<main class="page-shell">
+  <section class="calculator-card" aria-labelledby="calculator-title">
+    <div class="card-heading"><span class="step">01</span><div><h2 id="calculator-title">Dados da aplicação</h2><p>Preencha os campos para calcular.</p></div></div>
+    <form [formGroup]="form" (ngSubmit)="calculate()" novalidate>
+      <label for="initialValue">Valor inicial</label>
+      <div class="input-affix" [class.invalid]="form.controls.initialValue.touched && form.controls.initialValue.invalid"><span>R$</span><input id="initialValue" type="number" formControlName="initialValue" min="0.01" step="0.01" placeholder="1.000,00" /></div>
+      @if (form.controls.initialValue.touched && form.controls.initialValue.invalid) { <p class="field-error">Informe um valor maior que zero.</p> }
+      <label for="months">Prazo para resgate</label>
+      <div class="input-affix suffix" [class.invalid]="form.controls.months.touched && form.controls.months.invalid"><input id="months" type="number" formControlName="months" min="2" step="1" placeholder="12" /><span>meses</span></div>
+      @if (form.controls.months.touched && form.controls.months.invalid) { <p class="field-error">Informe um prazo inteiro de pelo menos 2 meses.</p> }
+      <button type="submit" [disabled]="form.invalid || loading()">{{ loading() ? 'Calculando…' : 'Calcular investimento' }}</button>
+    </form>
+    @if (errorMessage()) { <div class="alert" role="alert">{{ errorMessage() }}</div> }
+    @if (result(); as calculation) {
+      <section class="results" aria-live="polite" aria-labelledby="result-title">
+        <div class="result-heading"><span class="step">02</span><h2 id="result-title">Resultado da simulação</h2></div>
+        <div class="highlight-results"><article><span>Resultado bruto</span><strong>{{ calculation.grossAmount | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</strong></article><article class="net-result"><span>Resultado líquido</span><strong>{{ calculation.netAmount | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</strong></article></div>
+        <dl><div><dt>Rendimento bruto</dt><dd>{{ calculation.grossEarnings | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</dd></div><div><dt>Alíquota de IR</dt><dd>{{ calculation.taxRate | percent:'1.1-1':'pt-BR' }}</dd></div><div><dt>Imposto sobre o rendimento</dt><dd>− {{ calculation.taxAmount | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</dd></div></dl>
+        <p class="result-note">O imposto incide somente sobre o rendimento, não sobre o valor investido.</p>
+      </section>
+    }
+  </section>
+</main>
